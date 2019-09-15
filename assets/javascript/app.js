@@ -56,7 +56,7 @@ const badImages = [
 ];
 var time = 10;
 var correctAnswers = Array(questions.length);
-var userAnswers = Array(questions.length);
+var userAnswers = Array(questions.length, 9);
 var qInterval;
 var wait;
 var ques = -1;
@@ -78,9 +78,7 @@ function decrement() {
     $(".countdown").html("Time Remaining: " + time);
     if (time == 0) {
         stop();
-        clearPage();
         result();
-        time = 10;
     }
 };
 
@@ -92,10 +90,10 @@ function stop() {
 
 // transitions
 function start() {
-
     $(".countdown").html($("<button class='btn btn-lg btn-warning start'><h2>Start</h2></button>"));
 
     $(".start").on("click", function () {
+        perQuestion();
         eachQuestion(questions);
     });
 };
@@ -104,10 +102,11 @@ function moveOn() {
     $(".answer").on("click", function () {
         var thisButton = (questions[ques].answers.indexOf($(this).text()));
         userAnswers[ques] = (thisButton);
+        clearPage();
         result();
         check = false;
     });
-
+    return userAnswers;
 };
 
 function clearPage() {
@@ -122,17 +121,16 @@ function clearPage() {
 // generating questions
 
 function eachQuestion() {
-    perQuestion();
     ++ques;
-    // console.log("question index: " + ques);
+
+    console.log(questions[ques].question);
+    console.log(questions[ques].answers[parseInt(questions[ques].solution)]);
+
     $(".questions").html("<strong>" + questions[ques].question + "</strong>");
     var As = questions[ques].answers
     for (i in questions[ques].answers) {
         $(".answers").append("<button class='btn btn-lg btn-outline-dark answer' name='q" + ques + "'>" + As[i] + "</button> <br></br>");
     };
-
-    console.log(questions[ques].question);
-    console.log(questions[ques].answers[parseInt(questions[ques].solution)])
 
     $(".cont").html("<button class='btn btn-lg btn-warning continue'>Continue</button>");
 
@@ -168,9 +166,10 @@ function result() {
         if (ques < (questions.length - 1)) {
             clearPage();
             eachQuestion(questions);
+            time = 10;
+            perQuestion();
         }
         else {
-
             clearPage();
             results();
         };
@@ -179,7 +178,6 @@ function result() {
 };
 
 function results() {
-
     var num = parseInt(questions.length);
     if (score === num) {
         $(".countdown").html("Congrats! You got a perfect score!");

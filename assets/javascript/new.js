@@ -79,7 +79,7 @@ function decrement() {
     $(".countdown").html("Time Remaining: " + time);
     if (time == 0) {
         stop();
-        ///result singular
+        result();
     }
 };
 
@@ -171,6 +171,8 @@ function result() {
         if (ques < (questions.length - 1)) {
             clearPage();
             eachQuestion(questions);
+            time = 10;
+            perQuestion();
         }
         else {
 
