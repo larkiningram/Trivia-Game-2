@@ -57,7 +57,6 @@ const badImages = [
 var time = 10;
 var correctAnswers = Array(questions.length);
 var userAnswers = Array(questions.length);
-
 var qInterval;
 var wait;
 var ques = -1;
@@ -79,7 +78,9 @@ function decrement() {
     $(".countdown").html("Time Remaining: " + time);
     if (time == 0) {
         stop();
-        ///result singular
+        clearPage();
+        result();
+        time = 10;
     }
 };
 
@@ -95,7 +96,6 @@ function start() {
     $(".countdown").html($("<button class='btn btn-lg btn-warning start'><h2>Start</h2></button>"));
 
     $(".start").on("click", function () {
-        perQuestion();
         eachQuestion(questions);
     });
 };
@@ -104,13 +104,11 @@ function moveOn() {
     $(".answer").on("click", function () {
         var thisButton = (questions[ques].answers.indexOf($(this).text()));
         userAnswers[ques] = (thisButton);
-        clearPage();
         result();
         check = false;
     });
 
 };
-
 
 function clearPage() {
     stop();
@@ -124,6 +122,7 @@ function clearPage() {
 // generating questions
 
 function eachQuestion() {
+    perQuestion();
     ++ques;
     // console.log("question index: " + ques);
     $(".questions").html("<strong>" + questions[ques].question + "</strong>");
@@ -131,6 +130,9 @@ function eachQuestion() {
     for (i in questions[ques].answers) {
         $(".answers").append("<button class='btn btn-lg btn-outline-dark answer' name='q" + ques + "'>" + As[i] + "</button> <br></br>");
     };
+
+    console.log(questions[ques].question);
+    console.log(questions[ques].answers[parseInt(questions[ques].solution)])
 
     $(".cont").html("<button class='btn btn-lg btn-warning continue'>Continue</button>");
 
@@ -142,9 +144,6 @@ function eachQuestion() {
 // results
 
 function result() {
-    console.log(questions[ques].solution);
-    console.log(userAnswers[ques]);
-
     if (questions[ques].solution === userAnswers[ques]) {
         score++;
         check = true;
@@ -158,13 +157,11 @@ function result() {
     if (check === true) {
         $(".countdown").html("You got it!");
         $(".answers").html("<img src=" + good + ">");
-
     }
     else {
         $(".countdown").html("No, stupid!");
         $(".questions").html("The right answer was " + questions[ques].answers[cor]);
         $(".answers").html("<img src=" + bad + ">");
-
     };
 
     $(".cont").on("click", function () {
