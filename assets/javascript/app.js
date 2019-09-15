@@ -1,5 +1,5 @@
 // initial conditions
-const questions = [
+const questionsArray = [
     {
         question: "What is Harry Potter's owl's name?",
         answers: ["Owl", "Crookshanks", "Hedwig", "Pigwidgeon"],
@@ -36,6 +36,7 @@ const questions = [
         solution: 1
     }
 ];
+var questions = questionsArray;
 const goodImages = [
     "assets/images/results/good/1.gif",
     "assets/images/results/good/2.gif",
@@ -62,6 +63,7 @@ var wait;
 var ques = -1;
 var score = 0;
 var check = false;
+
 
 start();
 
@@ -93,8 +95,9 @@ function start() {
     $(".countdown").html($("<button class='btn btn-lg btn-warning start'><h2>Start</h2></button>"));
 
     $(".start").on("click", function () {
+        shuffle();
         perQuestion();
-        eachQuestion(questions);
+        eachQuestion();
     });
 };
 
@@ -120,8 +123,13 @@ function clearPage() {
 
 // generating questions
 
+function shuffle() {
+    questions.sort(function(a, b){return 0.5 - Math.random()});
+    return questions;
+};
+
 function eachQuestion() {
-    ++ques;
+    ques = ques + 1;
 
     console.log(questions[ques].question);
     console.log(questions[ques].answers[parseInt(questions[ques].solution)]);
@@ -165,7 +173,7 @@ function result() {
     $(".cont").on("click", function () {
         if (ques < (questions.length - 1)) {
             clearPage();
-            eachQuestion(questions);
+            eachQuestion();
             time = 10;
             perQuestion();
         }
