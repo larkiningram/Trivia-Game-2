@@ -59,17 +59,11 @@ var time = 10;
 var correctAnswers = Array(questions.length);
 var userAnswers = Array(questions.length, 9);
 var qInterval;
-var wait;
 var ques = -1;
 var score = 0;
 var check = false;
 
-
 start();
-
-$(".head").on("click", function() {
-    restart();
-})
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -124,13 +118,20 @@ function clearPage() {
 };
 
 function restart() {
-    stop();
     $(".cont").html("");
     $(".countdown").html("");
     $(".questions").html("");
     $(".answers").html("");
+    questions = questionsArray;
+    time = 10;
+    correctAnswers = Array(questions.length);
+    userAnswers = Array(questions.length, 9);
+    qInterval;
+    ques = -1;
+    score = 0;
+    check = false;
     start();
-}
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -142,10 +143,13 @@ function shuffle() {
 };
 
 function eachQuestion() {
-    ques = ques + 1;
+    $(".cont").html("");
 
-    console.log(questions[ques].question);
-    console.log(questions[ques].answers[parseInt(questions[ques].solution)]);
+    ques = ques + 1;
+    console.log("index: " + ques)
+
+    // console.log(questions[ques].question);
+    // console.log(questions[ques].answers[parseInt(questions[ques].solution)]);
 
     $(".questions").html("<strong>" + questions[ques].question + "</strong>");
     var As = questions[ques].answers
@@ -153,7 +157,6 @@ function eachQuestion() {
         $(".answers").append("<button class='btn btn-lg btn-outline-dark answer' name='q" + ques + "'>" + As[i] + "</button> <br></br>");
     };
 
-    $(".cont").html("<button class='btn btn-lg btn-warning continue'>Continue</button>");
 
     moveOn();
 };
@@ -163,6 +166,8 @@ function eachQuestion() {
 // results
 
 function result() {
+    $(".cont").html("<button class='btn btn-lg btn-warning continue'>Continue</button>");
+
     if (questions[ques].solution === userAnswers[ques]) {
         score++;
         check = true;
