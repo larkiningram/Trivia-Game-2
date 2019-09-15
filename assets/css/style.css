@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0 auto;
+    background-image: url(../images/harry.jpg);
+    background-size: repeat;
+}
+
+
+.container {
+    background: peachpuff;
+    width: 50%;
+    
+}
+
+.space {
+    color: peachpuff;
+}
+
+.head {
+    /* background: #72CCDE; */
+    width: 75%;
+}

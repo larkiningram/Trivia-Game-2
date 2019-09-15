@@ -92,3 +92,25 @@ function results() {
     //     stop()
     //     results();
     // });
+
+
+
+
+// function eachQuestion(item, index) {
+//     console.log(index);
+
+//     console.log(item.question);
+
+//     $(".questions").html("<strong>" + item.question + "</strong>");
+//     for (i in questions.answers) {
+//         $(".answers").html("<button class='btn btn-lg btn-warning answer' value='" + index + "'>" + item.answer[i] + "</button>");
+//     };
+
+//     $(".sub").html("<button class='btn btn-lg btn-warning continue'>Continue</button>");
+
+//     wait = setInterval(result(), 5000);
+// };
+
+
+        // ques++;
+        // questions.forEach(eachQuestion);
