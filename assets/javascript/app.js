@@ -59,7 +59,7 @@ var time = 10;
 var correctAnswers = Array(questions.length);
 var userAnswers = Array(questions.length, 9);
 var qInterval;
-var ques = -1;
+var ques = 0;
 var score = 0;
 var check = false;
 
@@ -106,6 +106,7 @@ function moveOn() {
         clearPage();
         result();
         check = false;
+        ques = ques + 1;
     });
     return userAnswers;
 };
@@ -127,7 +128,7 @@ function restart() {
     correctAnswers = Array(questions.length);
     userAnswers = Array(questions.length, 9);
     qInterval;
-    ques = -1;
+    ques = 0;
     score = 0;
     check = false;
     start();
@@ -138,14 +139,13 @@ function restart() {
 // generating questions
 
 function shuffle() {
-    questions.sort(function(a, b){return 0.5 - Math.random()});
+    questions.sort(function (a, b) { return 0.5 - Math.random() });
     return questions;
 };
 
 function eachQuestion() {
     $(".cont").html("");
 
-    ques = ques + 1;
     console.log("index: " + ques)
 
     // console.log(questions[ques].question);
@@ -156,7 +156,6 @@ function eachQuestion() {
     for (i in questions[ques].answers) {
         $(".answers").append("<button class='btn btn-lg btn-outline-dark answer' name='q" + ques + "'>" + As[i] + "</button> <br></br>");
     };
-
 
     moveOn();
 };
@@ -189,7 +188,7 @@ function result() {
     };
 
     $(".cont").on("click", function () {
-        if (ques < (questions.length - 1)) {
+        if (ques < (questions.length)) {
             clearPage();
             eachQuestion();
             time = 10;
