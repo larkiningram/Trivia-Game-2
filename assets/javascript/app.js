@@ -61,7 +61,9 @@ var userAnswers = Array(questions.length, 9);
 var qInterval;
 var ques = 0;
 var score = 0;
+var wrong = 0;
 var check = false;
+
 
 start();
 
@@ -101,12 +103,14 @@ function start() {
 
 function moveOn() {
     $(".answer").on("click", function () {
+        timeLeft = true;
         var thisButton = (questions[ques].answers.indexOf($(this).text()));
         userAnswers[ques] = (thisButton);
         clearPage();
         result();
         check = false;
         ques = ques + 1;
+        return timeLeft;
     });
     return userAnswers;
 };
@@ -130,6 +134,7 @@ function restart() {
     qInterval;
     ques = 0;
     score = 0;
+    wrong = 0;
     check = false;
     start();
 };
@@ -146,10 +151,8 @@ function shuffle() {
 function eachQuestion() {
     $(".cont").html("");
 
-    console.log("index: " + ques)
-
-    // console.log(questions[ques].question);
-    // console.log(questions[ques].answers[parseInt(questions[ques].solution)]);
+    console.log(questions[ques].question);
+    console.log(questions[ques].answers[parseInt(questions[ques].solution)]);
 
     $(".questions").html("<strong>" + questions[ques].question + "</strong>");
     var As = questions[ques].answers
@@ -160,11 +163,19 @@ function eachQuestion() {
     moveOn();
 };
 
+// function moreQuestions() {
+//     clearPage();
+//     eachQuestion();
+//     time = 10;
+//     perQuestion();
+// };
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // results
 
 function result() {
+
     $(".cont").html("<button class='btn btn-lg btn-warning continue'>Continue</button>");
 
     if (questions[ques].solution === userAnswers[ques]) {
@@ -182,9 +193,10 @@ function result() {
         $(".answers").html("<img src=" + good + ">");
     }
     else {
-        $(".countdown").html("No, stupid!");
+        $(".countdown").html("Wrong!");
         $(".questions").html("The right answer was " + questions[ques].answers[cor]);
         $(".answers").html("<img src=" + bad + ">");
+        wrong++;
     };
 
     $(".cont").on("click", function () {
@@ -200,6 +212,8 @@ function result() {
         };
 
     });
+
+    // setTimeout(moreQuestions, 3000);
 };
 
 function results() {
@@ -217,6 +231,9 @@ function results() {
         $(".countdown").html("ur a failure");
     }
     $(".questions").html("<h2>Your score: " + score + "/" + num + "</h2> <br></br>");
+
+    $(".answers").html("<h3>You got " + wrong + " question(s) wrong. </h3> <br></br>");
+
 
     $(".cont").html("<button class='btn btn-lg btn-warning start'><h2>Start Over?</h2></button>")
 
