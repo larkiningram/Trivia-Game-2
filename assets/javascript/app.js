@@ -67,6 +67,10 @@ var check = false;
 
 start();
 
+$(".head").on("click", function() {
+    restart();
+})
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // timing functions
@@ -118,6 +122,15 @@ function clearPage() {
     $(".questions").html("");
     $(".answers").html("");
 };
+
+function restart() {
+    stop();
+    $(".cont").html("");
+    $(".countdown").html("");
+    $(".questions").html("");
+    $(".answers").html("");
+    start();
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -204,10 +217,6 @@ function results() {
     $(".cont").html("<button class='btn btn-lg btn-warning start'><h2>Start Over?</h2></button>")
 
     $(".cont").on("click", function () {
-        $(".cont").html("");
-        $(".countdown").html("");
-        $(".questions").html("");
-        $(".answers").html("");
-        start();
+        restart();
     });
 };
