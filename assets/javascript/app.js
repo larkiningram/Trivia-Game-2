@@ -1,15 +1,4 @@
-
-function start() {
-    $(".countdown").html("<button class='start btn-lg btn-warning'> <h2>Start </h2> </button>");
-
-    $(".start").on("click", function () {
-        tableRow(questions)
-    });
-};
-
-start();
-
-
+// initial conditions
 const questions = [
     {
         question: "What is Harry Potter's owl's name?",
@@ -47,52 +36,153 @@ const questions = [
         solution: 1
     }
 ];
-
-//// determine score
-var correctAnswers = [];
+const goodImages = [
+    "assets/images/results/good/1.gif",
+    "assets/images/results/good/2.gif",
+    "assets/images/results/good/3.gif",
+    "assets/images/results/good/4.gif",
+    "assets/images/results/good/5.gif",
+    "assets/images/results/good/6.gif",
+    "assets/images/results/good/7.gif",
+];
+const badImages = [
+    "assets/images/results/bad/1b.gif",
+    "assets/images/results/bad/2b.gif",
+    "assets/images/results/bad/3b.gif",
+    "assets/images/results/bad/4b.gif",
+    "assets/images/results/bad/5b.gif",
+    "assets/images/results/bad/6b.gif",
+    "assets/images/results/bad/7b.gif",
+];
+var time = 10;
+var correctAnswers = Array(questions.length);
 var userAnswers = Array(questions.length);
-var score = 0;
 
-function answerKey() {
-    for (i in questions) {
-        var right = questions[i].solution;
-        currentQuestion = (parseInt(i) + parseInt(1))
-        correctAnswers.push(currentQuestion + ": " + questions[i].answers[right]);
+var qInterval;
+var wait;
+var ques = -1;
+var score = 0;
+var check = false;
+
+start();
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+// timing functions
+function perQuestion() {
+    $(".countdown").html("");
+    qInterval = setInterval(decrement, 1000);
+};
+
+function decrement() {
+    time--;
+    $(".countdown").html("Time Remaining: " + time);
+    if (time == 0) {
+        stop();
+        ///result singular
+    }
+};
+
+function stop() {
+    clearInterval(qInterval);
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+// transitions
+function start() {
+
+    $(".countdown").html($("<button class='btn btn-lg btn-warning start'><h2>Start</h2></button>"));
+
+    $(".start").on("click", function () {
+        perQuestion();
+        eachQuestion(questions);
+    });
+};
+
+function moveOn() {
+    $(".answer").on("click", function () {
+        var thisButton = (questions[ques].answers.indexOf($(this).text()));
+        userAnswers[ques] = (thisButton);
+        clearPage();
+        result();
+        check = false;
+    });
+
+};
+
+
+function clearPage() {
+    stop();
+    $(".countdown").html("");
+    $(".questions").html("");
+    $(".answers").html("");
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+// generating questions
+
+function eachQuestion() {
+    ++ques;
+    // console.log("question index: " + ques);
+    $(".questions").html("<strong>" + questions[ques].question + "</strong>");
+    var As = questions[ques].answers
+    for (i in questions[ques].answers) {
+        $(".answers").append("<button class='btn btn-lg btn-outline-dark answer' name='q" + ques + "'>" + As[i] + "</button> <br></br>");
     };
 
-    return correctAnswers;
+    $(".cont").html("<button class='btn btn-lg btn-warning continue'>Continue</button>");
+
+    moveOn();
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////
 
-function userKey() {
-    for (i in questions) {   
-        currentQuestion = (parseInt(i) + parseInt(1))
-        userIndex = ($("input[name=" + currentQuestion + "]:checked").val());
-        userAnswers[i] =(currentQuestion + ": " + questions[i].answers[userIndex]);
+// results
+
+function result() {
+    console.log(questions[ques].solution);
+    console.log(userAnswers[ques]);
+
+    if (questions[ques].solution === userAnswers[ques]) {
+        score++;
+        check = true;
+    };
+
+    var cor = parseInt(questions[ques].solution);
+
+    var good = goodImages[ques];
+    var bad = badImages[ques];
+
+    if (check === true) {
+        $(".countdown").html("You got it!");
+        $(".answers").html("<img src=" + good + ">");
+
     }
+    else {
+        $(".countdown").html("No, stupid!");
+        $(".questions").html("The right answer was " + questions[ques].answers[cor]);
+        $(".answers").html("<img src=" + bad + ">");
 
-    return userAnswers;
-};
+    };
 
-function userScore() {
-    for (i in userAnswers) {
-        currentQuestion = (parseInt(i) + parseInt(1))
-        if (userAnswers[i] === correctAnswers[i]) {
-            score++;
+    $(".cont").on("click", function () {
+        if (ques < (questions.length - 1)) {
+            clearPage();
+            eachQuestion(questions);
         }
-        else if (userAnswers[i] === (currentQuestion + ": undefined")) {
-            userAnswers[i] = "You forgot this one!";
-        }
-    }
-    return score;
-};
+        else {
 
+            clearPage();
+            results();
+        };
+
+    });
+};
 
 function results() {
-    answerKey();
-    userKey();
-    userScore();
-    $("#sub").hide();
+
     var num = parseInt(questions.length);
     if (score === num) {
         $(".countdown").html("Congrats! You got a perfect score!");
@@ -107,69 +197,14 @@ function results() {
         $(".countdown").html("ur a failure");
     }
     $(".questions").html("<h2>Your score: " + score + "/" + num + "</h2> <br></br>");
-    $(".correct").html("<strong>Correct Answers </strong> <br></br>");
-    $(".user").html("<Strong> User Answers</strong> <br></br>");
-    for (i in correctAnswers) {
-        $(".user").append(userAnswers[i] + "<br></br>");
-        $(".correct").append(correctAnswers[i] + "<br></br>");
 
-    };
-};
+    $(".cont").html("<button class='btn btn-lg btn-warning start'><h2>Start Over?</h2></button>")
 
-//// displaying questions and answers
-
-function tableRow() {
-    timeRemaining();
-    for (i in questions) {
-        var currentQuestion = questions[i].question;
-        var currentAnswers = questions[i].answers;
-        var currentQuestionNumber = (parseInt(i) + parseInt(1))
-
-        $(".questions").append("<strong>" + currentQuestionNumber + ": " + currentQuestion + "</strong><br> <br>");
-
-        for (letter in currentAnswers) {
-            $(".answers").append('<input id="q" type="radio" name=' + currentQuestionNumber + ' value=' + letter + '> \t' + currentAnswers[letter] + "\t");
-            if (letter === "3") {
-                $(".answers").append("<br> <br>");
-            }
-        };
-        console.log(currentQuestion);
-        console.log(currentAnswers);
-    };
-
-    $(".sub").html('<button id="sub" class="btn btn-lg btn-warning"> Submit </button>');
-
-    $("#sub").on("click", function() {
-        stop()
-        results();
+    $(".cont").on("click", function () {
+        $(".cont").html("");
+        $(".countdown").html("");
+        $(".questions").html("");
+        $(".answers").html("");
+        start();
     });
 };
-
-
-/// timing functions 
-
-var time = 60;
-var inter;
-
-
-function timeRemaining() {
-    $(".countdown").html("");
-    clearInterval(inter);
-    inter = setInterval(decrement, 1000);
-};
-
-function decrement() {
-
-    time--;
-    $(".countdown").html("Time Remaining: " + time);
-
-    if (time === 0) {
-        stop();
-        results();
-    }
-};
-
-function stop() {
-    clearInterval(inter);
-};
-
